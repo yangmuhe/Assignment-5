@@ -13,9 +13,13 @@ var map = canvas
     .attr('class','canvas')
     .attr('transform','translate('+margin.l+','+margin.t+')');
 
-//TODO: create a projection, and a d3.geo.path() generator
+//TODO: set up a mercator projection, and a d3.geo.path() generator
 //Center the projection at the center of Boston
-var bostonLatLng = [42.315520,-71.088066]; //from http://itouchmap.com/latlong.html
+var bostonLngLat = [-71.088066,42.315520]; //from http://itouchmap.com/latlong.html
+var projection = d3.geo.mercator()
+    //...
+
+var path = d3.geo.path().projection(projection);
 
 //TODO: create a color scale
 
