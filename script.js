@@ -92,6 +92,7 @@ function draw(blkGroup, nbh){
         .scale(s)
         .translate(t);
 
+    //draw choropleth
     map.selectAll('.block-groups')
         .data(blkGroup.features)
         .enter()
@@ -105,13 +106,13 @@ function draw(blkGroup, nbh){
             //var medianIncome = (incomeByBlockGroup.get(d.properties.geoid)).income;
             var medianIncome = incomeByBlockGroup.get(d.properties.geoid);
             //console.log(medianIncome);
-            if(medianIncome==0){
-                return 'rgb(220,220,220)';
-            }
+            if(medianIncome==0){return 'rgb(220,220,220)';}
 
             return colorScale(medianIncome);
         })
+        .call(tooltip);
 
+    //add boundaries of neighborhoods
     map.selectAll('.boundary')
         .data(nbh.features)
         .enter()
@@ -123,6 +124,7 @@ function draw(blkGroup, nbh){
         .style('opacity',.5)
         .style('fill','none')
 
+    //add names of neighborhoods
     map.selectAll('.lable')
         .data(nbh.features)
         .enter()
@@ -149,7 +151,7 @@ function draw(blkGroup, nbh){
         })
 }
 
-//Tooltip
+//Tooltip (Week 8)
 function tooltip(selection){
     selection
         .on('mouseenter',function(d){
@@ -159,10 +161,22 @@ function tooltip(selection){
 
             var medianIncome = incomeByBlockGroup.get(d.properties.geoid);
             //console.log(medianIncome);
-            tooltip.select('#income').html(medianIncome);
+            tooltip.select('#medianIncome').html(medianIncome);
         })
-        .on('mousemove',function(){
-            var xy = d3.mouse()
+
+        .on('mouseleave',function(){
+            d3.select('.custom-tooltip')
+                .transition()
+                .style('opacity',0)
+        })
+
+        .on('mousemove', function(){
+            var xy = d3.mouse(document.getElementById('map'));
+            var left = xy[0], top = xy[1];
+
+            d3.select('.custom-tooltip')
+                .style('left', left + 50 + 'px')
+                .style('top',top + 50 + 'px')
         })
 }
 
